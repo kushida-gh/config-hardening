@@ -26,9 +26,9 @@
 # 
 #   /boot			512 MB
 #   /home			1024 MB
-#   /tmp			512 MB
-#   /usr			5120 MB
-#   /var			2048 MB
+#   /tmp		   	512 MB
+#   /usr		   	5120 MB
+#   /var		   	2048 MB
 #   /var/tmp		512 MB
 #   /var/log		10240 MB
 #   /var/log/audit	512 MB
