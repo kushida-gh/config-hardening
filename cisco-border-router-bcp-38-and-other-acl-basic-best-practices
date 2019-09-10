@@ -1,14 +1,18 @@
 Cisco IOS Border Router Example ACL
 
-Assumes 2 interfaces (one provider-facing, other towards corporate firewall) connecting only to non-RFC1918 networks and the router does not NAT. In this example, the x.x.x.x refers to the public IPv4 network space assigned to the organization.
+Assumes 2 interfaces (one provider-facing, other towards corporate firewall) connecting only to non-RFC1918 networks
+and the router does not NAT. In this example, the x.x.x.x refers to the public IPv4 network space assigned to the 
+organization.
 
 
 
 Objectives:
 
-Reduce firewall log noise and constant Internet radiation (random scanning, backscatter, etc.) from making it past the router.
+Reduce firewall log noise and constant Internet radiation (random scanning, backscatter, etc.) from making it past 
+the router.
 
-NEVER use the "any" keyword without understanding the consequences! "Any" DOES NOT EQUAL "the Internet!" It means ANY IPv4 address, private or public!
+NEVER use the "any" keyword without understanding the consequences! "Any" DOES NOT EQUAL "the Internet!" It means 
+ANY IPv4 address, private or public!
 
 Always use the "established" keyword when accounting for TCP return traffic to reduce SYN-only scan noise on firewall logs.
 
@@ -70,7 +74,8 @@ ip access-list extended outside-in
  permit icmp any host x.x.x.101 unreachable
  permit icmp any host x.x.x.101 ttl-exceeded
 
- # A final cleanup rule at the end of an ACL applied on a public-facing interface means logging all Internet noise that gets dropped and increases the potential of DoS - use only if you're willing to accept the risk
+ # A final cleanup rule at the end of an ACL applied on a public-facing interface means logging all Internet noise that 
+ # gets dropped and increases the potential of DoS - use only if you're willing to accept the risk
 
  remark --- Clean-up log rule
  deny ip any any log-input
