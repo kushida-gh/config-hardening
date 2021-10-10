@@ -1,0 +1,69 @@
+# This is for the Minimal Installation option (web browser and basic utilities only)
+# --------------------------------------------------------------------------------
+
+
+
+
+# Disable IPv6
+
+sudo vi /etc/default/grub
+
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash ipv6.disable=1"
+GRUB_CMDLINE_LINUX="ipv6.disable=1"
+
+sudo update-grub
+
+
+
+
+# --------------------------------------------------------------------------------
+
+# Disable Multicast DNS
+
+sudo apt-get -y purge avahi-daemon
+
+
+# --------------------------------------------------------------------------------
+
+# Disable requests to connectivity-check.ubuntu.com (Internet connectivity check)
+
+sudo vi /var/lib/NetworkManager/NetworkManager-intern.conf
+
+[connectivity]
+.set.enabled=false
+
+sudo systemctl restart NetworkManager.service
+
+
+
+
+# --------------------------------------------------------------------------------
+
+# Disable SNMP printer discovery via to subnet broadcast (comment out "net autodiscovery")
+
+sudo vi /etc/sane.d/kodakaio.conf
+sudo vi /etc/sane.d/magicolor.conf
+sudo vi /etc/sane.d/epson2.conf
+
+# comment out "dell1600n_net"
+
+sudo vi /etc/sane.d/dll.conf
+
+
+
+
+# --------------------------------------------------------------------------------
+
+# Disable requests to daisy.ubuntu.com (Ubuntu error tracking submission)
+
+sudo apt-get -y purge whoopsie
+
+
+
+
+# --------------------------------------------------------------------------------
+
+# Disable requests to metrics.ubuntu.com and popcon.ubuntu.com (automatic sending of crash reports)
+
+sudo apt purge ubuntu-report popularity-contest apport
+
