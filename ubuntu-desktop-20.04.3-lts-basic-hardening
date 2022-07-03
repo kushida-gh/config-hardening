@@ -67,3 +67,12 @@ sudo apt-get -y purge whoopsie
 
 sudo apt purge ubuntu-report popularity-contest apport
 
+
+
+
+# --------------------------------------------------------------------------------
+
+# Disable systemd-resolved so /etc/resolv.conf can be manually used again
+
+sudo systemctl stop systemd-resolved
+sudo systemctl disable systemd-resolved
