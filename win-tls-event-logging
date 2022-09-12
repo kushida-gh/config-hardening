@@ -1,0 +1,48 @@
+# To determine which TLS versions that clients might be negotiating successfully to your host (thus seeing if versions older 
+# than TLS 1.2 are being used internally), update registry so Windows will keep TLS handshake Schannel transactions.
+#
+# https://docs.microsoft.com/en-us/troubleshoot/developer/webapps/iis/health-diagnostic-performance/enable-schannel-event-logging
+
+# Set EventLogging Schannel registry entry to 0x0004 for System Log informational and success events regarding TLS negotiations.
+#
+
+
+# Reboot not necessary for this change to take effect - result under Event Viewer > Windows Logs > System
+Set-ItemProperty -path 'HKLM:\System\CurrentControlSet\Control\SecurityProviders\SCHANNEL' -name 'EventLogging' -value '4'
+
+
+
+# Filter for Event ID 36880 when reviewing events
+Get-WinEvent -FilterHashtable @{logname='System'; id=36880} | Format-List
+
+
+
+# Example events will look like:
+
+TimeCreated  : 9/11/2022 5:48:25 PM
+ProviderName : Schannel
+Id           : 36880
+Message      : A TLS server handshake completed successfully. The negotiated cryptographic parameters are as follows.
+
+                  Protocol version: TLS 1.2
+                  CipherSuite: 0xC030
+                  Exchange strength: 255 bits
+                  Context handle: 0x1fa8ddd5880
+                  Target name:
+                  Local certificate subject name: CN=TEST-WIN-HOST
+                  Remote certificate subject name:
+                  
+                  
+                  
+TimeCreated  : 9/11/2022 5:43:37 PM
+ProviderName : Schannel
+Id           : 36880
+Message      : A TLS server handshake completed successfully. The negotiated cryptographic parameters are as follows.
+
+                  Protocol version: TLS 1.0
+                  CipherSuite: 0xC014
+                  Exchange strength: 255 bits
+                  Context handle: 0x1fa8ddd4ed0
+                  Target name:
+                  Local certificate subject name: CN=TEST-WIN-HOST
+                  Remote certificate subject name:
