@@ -1,4 +1,9 @@
-# Does these registry values already exist?
+# Registry changes to remediate vulnerability findings related to Tenable Nessus Plugin ID 132101 (Windows Speculative Execution Configuration Check)
+# https://www.tenable.com/plugins/nessus/132101
+
+
+
+# Do these registry values already exist?
 Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name FeatureSettingsOverride
 Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name FeatureSettingsOverrideMask
 
