@@ -9,5 +9,5 @@ New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\M
 
 
 # Otherwise update those existing keys with settings remediating the vulnerability:
-Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name FeatureSettingsOverride -Value 72 -PropertyType DWORD -Force
-Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name FeatureSettingsOverrideMask -Value 3 -PropertyType DWORD -Force
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name FeatureSettingsOverride -Value 72 -Force
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name FeatureSettingsOverrideMask -Value 3 -Force
