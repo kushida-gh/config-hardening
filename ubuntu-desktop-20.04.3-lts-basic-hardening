@@ -1,9 +1,7 @@
 # This is for the Minimal Installation option (web browser and basic utilities only)
+
+
 # --------------------------------------------------------------------------------
-
-
-
-
 # Disable IPv6
 
 sudo vi /etc/default/grub
@@ -14,17 +12,13 @@ GRUB_CMDLINE_LINUX="ipv6.disable=1"
 sudo update-grub
 
 
-
-
 # --------------------------------------------------------------------------------
-
 # Disable Multicast DNS
 
 sudo apt-get -y purge avahi-daemon
 
 
 # --------------------------------------------------------------------------------
-
 # Disable requests to connectivity-check.ubuntu.com (Internet connectivity check)
 
 sudo vi /var/lib/NetworkManager/NetworkManager-intern.conf
@@ -35,10 +29,7 @@ sudo vi /var/lib/NetworkManager/NetworkManager-intern.conf
 sudo systemctl restart NetworkManager.service
 
 
-
-
 # --------------------------------------------------------------------------------
-
 # Disable SNMP printer discovery via to subnet broadcast (comment out "net autodiscovery")
 
 sudo vi /etc/sane.d/kodakaio.conf
@@ -50,29 +41,45 @@ sudo vi /etc/sane.d/epson2.conf
 sudo vi /etc/sane.d/dll.conf
 
 
-
-
 # --------------------------------------------------------------------------------
-
 # Disable requests to daisy.ubuntu.com (Ubuntu error tracking submission)
 
 sudo apt-get -y purge whoopsie
 
 
-
-
 # --------------------------------------------------------------------------------
-
 # Disable requests to metrics.ubuntu.com and popcon.ubuntu.com (automatic sending of crash reports)
 
 sudo apt purge ubuntu-report popularity-contest apport
 
 
-
-
 # --------------------------------------------------------------------------------
-
 # Disable systemd-resolved so /etc/resolv.conf can be manually used again
 
 sudo systemctl stop systemd-resolved
 sudo systemctl disable systemd-resolved
+
+
+# --------------------------------------------------------------------------------
+# Host firewall - remove UFW and rely on iptables only, basic INPUT chain updates
+
+sudo systemctl stop ufw
+sudo systemctl disable ufw
+sudo apt-get purge -y ufw
+
+sudo apt install -y iptables-persistent
+sudo systemctl enable iptables.service
+sudo systemctl start iptables.service
+sudo systemctl enable netfilter-persistent.service
+sudo systemctl start netfilter-persistent.service
+
+sudo cat /etc/iptables/rules.v4
+
+sudo iptables -F
+sudo iptables -I INPUT 1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -I INPUT 4 -j LOG --log-prefix 'DROPPED: '
+sudo iptables -P INPUT DROP
+
+sudo iptables -L -nv --line
+
+sudo iptables-save > /etc/iptables/rules.v4
