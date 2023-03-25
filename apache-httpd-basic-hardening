@@ -1,0 +1,48 @@
+# Based on Apache httpd 2.4, fresh install on an RPM-based system
+
+
+# General httpd hardening (assumes all of the following parameters have not been changed from their install defaults)
+# -----------------------------------------------------------------------------------------------------------------------
+
+# Remove the version of Apache httpd in use in the HTTP server response header
+sudo sed -i '1s/^/ServerTokens Prod\n/' /etc/httpd/conf/httpd.conf
+
+# Remove the httpd version information on server-generated page footers
+sudo sed -i '2s/^/ServerSignature Off\n/' /etc/httpd/conf/httpd.conf
+
+# Remove entity tags (ETags) representing file inode numbers
+sudo sed -i '3s/^/FileETag None\n/' /etc/httpd/conf/httpd.conf
+
+# Disable the TRACE method (plus virtually all vulnerability scanners will flag for it
+sudo sed -i '4s/^/TraceEnable Off\n/' /etc/httpd/conf/httpd.conf
+
+# Cross Site Scripting protection
+sudo sed -i '5s/^/Header set X-XSS-Protection "1; mode=block"\n/' /etc/httpd/conf/httpd.conf
+
+# Cross Site Scripting protection
+sudo sed -i '6s/^/Header edit Set-Cookie ^(.*)$ $1;HttpOnly;Secure\n/' /etc/httpd/conf/httpd.conf
+
+# Prevent clickjacking
+sudo sed -i '7s/^/Header always append X-Frame-Options SAMEORIGIN\n/' /etc/httpd/conf/httpd.conf
+
+# Prevent Slow Loris DoS attacks
+sudo sed -i '8s/^/Timeout 60\n/' /etc/httpd/conf/httpd.conf
+
+# Add an extra space after all of the above to separate from the rest of the httpd.conf contents
+sudo sed -i '9s/^/\n/' /etc/httpd/conf/httpd.conf
+
+# Enable Strict Transport Security (HSTS) (assumes <VirtualHost> is not defined in the conf file yet)
+sudo bash -c "echo -e >> /etc/httpd/conf/httpd.conf"
+sudo bash -c "echo '<VirtualHost *:443>' >> /etc/httpd/conf/httpd.conf"
+sudo bash -c "echo '   Header set Strict-Transport-Security "max-age=31536000"' >> /etc/httpd/conf/httpd.conf"
+sudo bash -c "echo '</VirtualHost>' >> /etc/httpd/conf/httpd.conf"
+
+
+
+# TLS Tuning (no SSL, because that's really, really old and no one should be using it)
+# -----------------------------------------------------------------------------------------------------------------------
+
+# Note: this is just a starting point and could be made more secure, but at the risk of potentially causing connectivity 
+# issues for clients which do not support modern cipher suites
+sudo sed -i '1s/^/SSLProtocol -ALL +TLSv1.2\n/' /etc/httpd/conf.d/ssl.conf
+sudo sed -i 's/^SSLCipherSuite PROFILE=SYSTEM/SSLCipherSuite HIGH:!MEDIUM:!aNULL:!MD5:!RC4/g' /etc/httpd/conf.d/ssl.conf
