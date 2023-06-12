@@ -1,0 +1,6 @@
+# Assuming Syslog-NG 3 (version 3.35.1 tested here) and conf file points to a non-default location for log storage - in this case /logs
+
+sudo chcon -t var_log_t /logs/ -R
+sudo semanage fcontext -a -t var_log_t '/logs(./*)?'
+sudo restorecon -vR /logs
+sudo semanage port -m -t syslogd_port_t -p tcp 514
