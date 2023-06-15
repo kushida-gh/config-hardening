@@ -1,0 +1,18 @@
+# Based on Java 8 update 371
+
+
+# During running of 2 MB stub installer file, a connection is made to:
+# javadl.oracle.com (CNAME resolves to Akamai CDN at the time of this research on 06/2023)
+# to download the full install file which then instantiates the install wizard.
+
+# After install a REG_SZ registry entry "SunJavaUpdateSched" is created under:
+# HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run
+# by the installer so during system starts, C:\Program Files (x86)\Common Files\Java\Java Update\jusched.exe
+# is running in the background. This is annoying. This executable will periodically make Internet calls to:
+# javadl-esd-secure.oracle.com (CNAME resolves to Akamai CDN at the time of this research on 06/2023)
+
+
+# Remove by:
+Remove-ItemProperty -Path 'HKLM:SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run' -Name SunJavaUpdateSched
+
+# and either terminiate the jusched.exe process or reboot the system.
