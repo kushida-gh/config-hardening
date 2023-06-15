@@ -1,0 +1,31 @@
+# Based on Adobe Acrobat Reader 23.003.20201
+
+
+# Service installed by Acrobat Reader DC
+AdobeARMservice (Adobe Acrobat Update Service)
+
+# Disable this via:
+Stop-Service AdobeARMservice
+Set-Service -StartupType Disabled AdobeARMservice
+
+
+
+# Scheduled task installed by Acrobat Reader
+Adobe Acrobat Update Task
+
+# Disable this via:
+Disable-ScheduledTask -TaskName "Adobe Acrobat Update Task"
+
+
+
+# Disable JavaScript by:
+New-ItemProperty -Path 'HKLM:SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown' -name 'bDisableJavaScript' -Value 1 -PropertyType DWORD
+New-ItemProperty -Path 'HKLM:SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown' -name 'bDisableTrustedFolders' -Value 1 -PropertyType DWORD
+
+# Note that some versions of Acrobat Reader may use a slightly different registry path, such as:
+# HKLM\SOFTWARE\WOW6432Node\Policies\Adobe\Acrobat Reader\DC\FeatureLockDown
+#
+# Notice "Acrobat Reader" instead of "Adobe Acrobat"; beware of such trickery
+
+# Use this example PDF to test whether JavaScript still functions:
+# https://acrobatusers.com/assets/collections/tutorials/legacy/tech_corners/javascript_corner/tips/2006/popup_windows_part2/AlertBoxExamples.pdf
