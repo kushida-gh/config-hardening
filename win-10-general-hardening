@@ -1,0 +1,68 @@
+# Windows 10 - General Hardening
+
+# Disable NetBIOS over TCP/IP
+# -----------------------------------------------------------
+set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces\tcpip* -Name NetbiosOptions -Value 2
+
+# Adapter Bindings
+# -----------------------------------------------------------
+# Disable QoS Packet Scheduler
+Disable-NetAdapterBinding -Name "*" -ComponentID ms_pacer
+
+# Disable File and Printer Sharing for Microsoft Networks
+Disable-NetAdapterBinding -Name "*" -ComponentID ms_server
+
+# Disable Internet Protocol Version (TCP/IPv6)
+Disable-NetAdapterBinding -Name "*" -ComponentID ms_tcpip6
+
+# Disable Link-Layer Topology Discovery Mapper I/O Driver
+Disable-NetAdapterBinding -Name "*" -ComponentID ms_lltdio
+
+# Disable Link-Layer Topology Discovery Responder
+Disable-NetAdapterBinding -Name "*" -ComponentID ms_rspndr
+
+# Disable Microsoft LLDP Protocol Driver
+Disable-NetAdapterBinding -Name "*" -ComponentID ms_lldp
+
+# Disable Teredo
+# -----------------------------------------------------------
+netsh interface teredo set state disabled
+
+# Disable IGMP
+# -----------------------------------------------------------
+New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\' -Name IGMPLevel -Value 0
+
+# Disable Web Proxy Auto-Discovery protocol (WPAD)
+# -----------------------------------------------------------
+New-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp\' -Name DisableWpad -Value 1
+
+# Disable SSDP
+# -----------------------------------------------------------
+# This doesn't seem to work on Windows 10
+# Disable-NetLldpAgent -NetAdapterName "*"
+Stop-Service "SSDPSRV" -Force
+Set-Service "SSDPSRV" -StartupType Disabled
+
+# Disable Connected User Experiences and Telemetry service
+# -----------------------------------------------------------
+Stop-Service "DiagTrack" -Force
+Set-Service "DiagTrack" -StartupType Disabled
+
+# Disable Microsoft Account Sign-in Assistant service
+# -----------------------------------------------------------
+Stop-Service "wlidsvc" -Force
+Set-Service "wlidsvc" -StartupType Disabled
+
+# Disable Secure Socket Tunneling Protocol Service service
+# -----------------------------------------------------------
+Stop-Service "SstpSvc" -Force
+Set-Service "SstpSvc" -StartupType Disabled
+
+# Disable Remote Assistance
+# -----------------------------------------------------------
+set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Remote Assistance\' -Name fAllowToGetHelp -Value 0
+
+# Disable Cortana
+# -----------------------------------------------------------
+New-Item -Path 'HKLM:\Software\Policies\Microsoft\Windows\' -Name 'Windows Search'
+New-ItemProperty -Path 'HKLM:\Software\Policies\Microsoft\Windows\Windows Search\' -Name AllowCortana -Value 0
