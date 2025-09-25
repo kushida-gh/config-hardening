@@ -59,9 +59,13 @@ sudo cat /etc/iptables/rules.v4
 
 sudo iptables -F
 sudo iptables -I INPUT 1 -m state --state ESTABLISHED,RELATED -j ACCEPT
-sudo iptables -I INPUT 4 -j LOG --log-prefix 'DROPPED: '
+sudo iptables -I INPUT 2 -j LOG --log-prefix 'DROPPED: '
 sudo iptables -P INPUT DROP
+
+# Drop WS-Discovery and IGMP multicasts
+sudo iptables -I OUTPUT 1 -d 239.255.255.250 -p udp --dport 3702 -j DROP
+sudo iptables -I OUTPUT 2 -d 224.0.0.22 -p igmp -j DROP
 
 sudo iptables -L -nv --line
 
- sudo bash -c "iptables-save > /etc/iptables/rules.v4"
+sudo bash -c "iptables-save > /etc/iptables/rules.v4"
