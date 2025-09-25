@@ -3,6 +3,7 @@ sudo apt upgrade -y
 
 # --------------------------------------------------------------------------------
 # Install basic networking tools and VM Tools packages
+
 sudo apt install -y net-tools open-vm-tools open-vm-tools-desktop
 
 # --------------------------------------------------------------------------------
