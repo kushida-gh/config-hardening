@@ -64,4 +64,4 @@ sudo iptables -P INPUT DROP
 
 sudo iptables -L -nv --line
 
-sudo iptables-save > /etc/iptables/rules.v4
+ sudo bash -c "iptables-save > /etc/iptables/rules.v4"
