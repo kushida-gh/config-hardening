@@ -1,0 +1,66 @@
+sudo apt update -y
+sudo apt upgrade -y
+
+# --------------------------------------------------------------------------------
+# Install basic networking tools and VM Tools packages
+sudo apt install -y net-tools open-vm-tools open-vm-tools-desktop
+
+# --------------------------------------------------------------------------------
+# Disable IPv6
+
+sudo vi /etc/default/grub
+
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash ipv6.disable=1"
+
+sudo update-grub
+
+# --------------------------------------------------------------------------------
+# Disable Multicast DNS, requests to daisy.ubuntu.com (Ubuntu error tracking submission)
+# and metrics.ubuntu.com and popcon.ubuntu.com (automatic sending of crash reports)
+
+sudo apt-get purge -y avahi-daemon whoopsie ubuntu-report popularity-contest apport
+
+# --------------------------------------------------------------------------------
+# Disable requests to connectivity-check.ubuntu.com (Internet connectivity check)
+
+sudo vi /var/lib/NetworkManager/NetworkManager-intern.conf
+
+[connectivity]
+.set.enabled=false
+ 
+# --------------------------------------------------------------------------------
+# Disable CUPS
+
+sudo systemctl stop cups-browsed
+sudo systemctl disable cups-browsed
+sudo systemctl stop cups
+sudo systemctl disable cups
+sudo apt purge -y cups
+
+sudo apt -y autoremove
+
+sudo apt install -y ubuntu-restricted-extras ffmpeg libavfilter-extra va-driver-all
+
+# --------------------------------------------------------------------------------
+# Host firewall - remove UFW and rely on iptables only, basic INPUT chain updates
+
+sudo systemctl stop ufw
+sudo systemctl disable ufw
+sudo apt-get purge -y ufw
+
+sudo apt install -y iptables-persistent
+sudo systemctl enable iptables.service
+sudo systemctl start iptables.service
+sudo systemctl enable netfilter-persistent.service
+sudo systemctl start netfilter-persistent.service
+
+sudo cat /etc/iptables/rules.v4
+
+sudo iptables -F
+sudo iptables -I INPUT 1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -I INPUT 4 -j LOG --log-prefix 'DROPPED: '
+sudo iptables -P INPUT DROP
+
+sudo iptables -L -nv --line
+
+sudo iptables-save > /etc/iptables/rules.v4
