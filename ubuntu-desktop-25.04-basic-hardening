@@ -59,7 +59,8 @@ sudo cat /etc/iptables/rules.v4
 
 sudo iptables -F
 sudo iptables -I INPUT 1 -m state --state ESTABLISHED,RELATED -j ACCEPT
-sudo iptables -I INPUT 2 -j LOG --log-prefix 'DROPPED: '
+sudo iptables -I INPUT 2 -s 127.0.0.0/8 -d 127.0.0.0/8 -i lo -j ACCEPT
+sudo iptables -I INPUT 3 -j LOG --log-prefix 'DROPPED: '
 sudo iptables -P INPUT DROP
 
 # Drop WS-Discovery and IGMP multicasts
