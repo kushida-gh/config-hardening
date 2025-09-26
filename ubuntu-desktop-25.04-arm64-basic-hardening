@@ -70,3 +70,7 @@ sudo iptables -I OUTPUT 2 -d 224.0.0.22 -p igmp -j DROP
 sudo iptables -L -nv --line
 
 sudo bash -c "iptables-save > /etc/iptables/rules.v4"
+
+# --------------------------------------------------------------------------------
+# Optional: install Chrome
+sudo apt install -u chromium-browser
